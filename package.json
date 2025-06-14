@@ -1,12 +1,13 @@
 {
-    "name": "jekall-to-react",
+    "name": "jekall",
     "private": true,
     "version": "0.0.0",
+    "homepage": "https://patient-roy.github.io/jekall",
     "type": "module",
     "scripts": {
         "dev": "vite",
         "build": "tsc -b && vite build",
-        "lint": "eslint .",
+        "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview"
     },
     "dependencies": {
