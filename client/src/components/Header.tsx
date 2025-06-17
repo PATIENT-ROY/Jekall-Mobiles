@@ -42,19 +42,19 @@ const Header: React.FC = () => {
         <div className="flex items-center justify-between">
           {/* Logo and Mobile Menu Button */}
           <div className="flex items-center">
-            <div className="md:hidden mr-4">
+            <div className="xl:hidden mr-4">
               <MobileMenu isOpen={isMenuOpen} onToggle={toggleMenu} />
             </div>
             <Logo className="hover:opacity-90 transition-opacity duration-200" />
           </div>
 
           {/* Search Bar - Desktop */}
-          <div className="hidden md:flex flex-1 mx-6">
+          <div className="hidden lg:flex flex-1 mx-6">
             <SearchBar className="w-full max-w-2xl" />
           </div>
 
           {/* Navigation - Desktop */}
-          <nav className="hidden md:flex items-center space-x-5">
+          <nav className="hidden xl:flex items-center space-x-5">
             {/* Home Links with smooth scrolling to sections */}
             {location === "/" && (
               <>
@@ -124,8 +124,8 @@ const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Search (Only visible on mobile) */}
-      <div className="md:hidden px-4 pb-3 pt-2">
+      {/* Mobile Search (Only visible on mobile and tablet) */}
+      <div className="lg:hidden px-4 pb-3 pt-2">
         <SearchBar mobile={true} />
       </div>
     </header>

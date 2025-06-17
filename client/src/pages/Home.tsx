@@ -12,24 +12,30 @@ import {
 import { FaWhatsapp } from "react-icons/fa";
 import HomeNavigation from "@/components/HomeNavigation";
 import useIntersectionObserver from "@/hooks/use-intersection-observer";
+import Smartphones from "@/./assets/images/categories/icon-categories/i-removebg-preview.png";
+import accessories from "@/./assets/images/categories/icon-categories/accessories-icon.png";
+import tablets from "@/./assets/images/categories/icon-categories/tablettes-icon.png";
+import slide1 from "@/./assets/images/bannerSlides/slide5.png";
+import slide2 from "@/./assets/images/bannerSlides/slide2.png";
+import slide3 from "@/./assets/images/bannerSlides/slide3.png";
 
 const bannerSlides = [
   {
     id: 1,
-    image: "https://patient-roy.github.io/jekall/images/slider/slide1.png",
+    image: slide1,
     title: "Smartphones Dernière Génération",
     description:
       "Découvrez notre gamme de smartphones haut de gamme à des prix compétitifs.",
   },
   {
     id: 2,
-    image: "https://patient-roy.github.io/jekall/images/slider/slide2.png",
+    image: slide2,
     title: "Accessoires Premium",
     description: "Complétez votre smartphone avec nos accessoires de qualité.",
   },
   {
     id: 3,
-    image: "https://patient-roy.github.io/jekall/images/slider/slide3.png",
+    image: slide3,
     title: "Tablettes Pour Enfants",
     description: "Éducatives et robustes pour le développement de vos enfants.",
   },
@@ -39,22 +45,19 @@ const categories = [
   {
     id: "smartphones",
     name: "Smartphones",
-    image:
-      "https://patient-roy.github.io/jekall/images/icon-categories/i-removebg-preview.png",
+    image: Smartphones,
     link: "/catalogue",
   },
   {
     id: "accessories",
     name: "Accessoires",
-    image:
-      "https://patient-roy.github.io/jekall/images/icon-categories/accessories-icon.png",
+    image: accessories,
     link: "/catalogue",
   },
   {
     id: "tablets",
     name: "Tablettes enfants",
-    image:
-      "https://patient-roy.github.io/jekall/images/icon-categories/image.png",
+    image: tablets,
     link: "/catalogue",
   },
 ];

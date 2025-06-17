@@ -18,7 +18,7 @@ const MobileMenu = ({ isOpen, onToggle }: MobileMenuProps) => {
   return (
     <>
       <button
-        className="md:hidden p-1.5 rounded-full hover:bg-white/10 transition-colors duration-200"
+        className="xl:hidden p-1.5 rounded-full hover:bg-white/10 transition-colors duration-200"
         onClick={onToggle}
         aria-label="Menu"
       >
@@ -27,7 +27,7 @@ const MobileMenu = ({ isOpen, onToggle }: MobileMenuProps) => {
 
       {/* Mobile Navigation Menu */}
       <div
-        className={`md:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300 ${
+        className={`xl:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300 ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={onToggle}

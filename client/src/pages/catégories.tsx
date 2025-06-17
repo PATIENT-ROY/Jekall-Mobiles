@@ -9,6 +9,9 @@ import {
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import NoProductsFound from "@/components/NoProductsFound";
+import Smartphones from "@/./assets/images/categories/icon-categories/i-removebg-preview.png";
+import accessories from "@/./assets/images/categories/icon-categories/accessories-icon.png";
+import tablets from "@/./assets/images/categories/icon-categories/tablettes-icon.png";
 
 // Brands data
 const brands = [
@@ -362,20 +365,17 @@ const categories = [
   {
     id: "smartphones",
     name: "Smartphones",
-    image:
-      "https://patient-roy.github.io/jekall/images/icon-categories/i-removebg-preview.png",
+    image: Smartphones,
   },
   {
     id: "accessories",
     name: "Accessoires",
-    image:
-      "https://patient-roy.github.io/jekall/images/icon-categories/accessories-icon.png",
+    image: accessories,
   },
   {
     id: "tablets",
     name: "Tablettes enfants",
-    image:
-      "https://patient-roy.github.io/jekall/images/icon-categories/image.png",
+    image: tablets,
   },
 ];
 
@@ -568,7 +568,7 @@ const Catalogue = () => {
                     className="h-full w-auto object-contain"
                   />
                 </div>
-                <h3 className="font-medium text-sm md:text-base">
+                <h3 className="font-medium text-[0.7rem] md:text-base">
                   {category.name}
                 </h3>
               </button>

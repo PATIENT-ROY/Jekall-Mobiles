@@ -262,7 +262,19 @@ const Footer = () => {
             <p className="text-gray-500 text-sm mb-4 md:mb-0">
               © {currentYear} Jekall Mobiles. Tous droits réservés.
             </p>
-            <div className="flex items-center space-x-4">
+            <p className="text-gray-500 text-sm mb-4 md:mb-0">
+              Site développé by{" "}
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white hover:underline"
+              >
+                Roy
+              </a>
+              <span className="text-red-500">dev</span>
+            </p>
+            {/* <div className="flex items-center space-x-4">
               <a
                 href="#"
                 className="text-gray-500 hover:text-gray-300 text-sm transition-colors duration-300"
@@ -283,7 +295,7 @@ const Footer = () => {
               >
                 FAQ
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
