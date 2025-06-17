@@ -1,10 +1,12 @@
 {
     "name": "jekall",
     "private": true,
+    "homepage": "https://patient-roy.github.io/Jekall-Mobiles",
     "version": "0.0.0",
-    "homepage": "https://patient-roy.github.io/jekall",
     "type": "module",
     "scripts": {
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d build",
         "dev": "vite",
         "build": "tsc -b && vite build",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -12,7 +14,11 @@
     },
     "dependencies": {
         "@radix-ui/react-hover-card": "^1.1.14",
+        "@radix-ui/react-menubar": "^1.1.15",
+        "@radix-ui/react-navigation-menu": "^1.2.13",
+        "@radix-ui/react-scroll-area": "^1.2.9",
         "@radix-ui/react-slot": "^1.2.3",
+        "@radix-ui/react-toast": "^1.2.14",
         "@tanstack/react-query": "^5.80.7",
         "@types/node": "^20.11.24",
         "class-variance-authority": "^0.7.1",
@@ -35,6 +41,7 @@
         "eslint": "^8.57.0",
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-react-refresh": "^0.4.5",
+        "gh-pages": "^6.3.0",
         "postcss": "^8.5.5",
         "tailwindcss": "^3.4.17",
         "typescript": "^5.4.2",
