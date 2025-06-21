@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
 import {
   Star,
   ChevronDown,
@@ -9,6 +10,7 @@ import {
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import NoProductsFound from "@/components/NoProductsFound";
+import AnimatedCard from "@/components/AnimatedCard";
 import Smartphones from "@/./assets/images/categories/icon-categories/i-removebg-preview.png";
 import accessories from "@/./assets/images/categories/icon-categories/accessories-icon.png";
 import tablets from "@/./assets/images/categories/icon-categories/tablettes-icon.png";
@@ -400,6 +402,8 @@ const priceRanges = [
 ];
 
 const Catalogue = () => {
+  const [location] = useLocation();
+
   // State for filters
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("smartphones");
@@ -411,33 +415,37 @@ const Catalogue = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState("featured"); // featured, price-low, price-high, newest, popular
 
+  // Read URL parameters on component mount and when location changes
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const brandsParam = urlParams.get("brands");
+    const searchParam = urlParams.get("search");
+
+    if (brandsParam) {
+      const brands = brandsParam.split(",").filter((brand) => brand.trim());
+      setSelectedBrands(brands);
+    }
+
+    if (searchParam) {
+      setSearchTerm(searchParam);
+    }
+  }, [location]);
+
   // Handlers for filters
   const toggleBrand = (brandId: string) => {
-    setSelectedBrands((prev) =>
-      prev.includes(brandId)
-        ? prev.filter((id) => id !== brandId)
-        : [...prev, brandId]
-    );
+    setSelectedBrands((prev) => (prev.includes(brandId) ? [] : [brandId]));
   };
 
   const toggleStorage = (storage: string) => {
-    setSelectedStorage((prev) =>
-      prev.includes(storage)
-        ? prev.filter((s) => s !== storage)
-        : [...prev, storage]
-    );
+    setSelectedStorage((prev) => (prev.includes(storage) ? [] : [storage]));
   };
 
   const toggleColor = (color: string) => {
-    setSelectedColors((prev) =>
-      prev.includes(color) ? prev.filter((c) => c !== color) : [...prev, color]
-    );
+    setSelectedColors((prev) => (prev.includes(color) ? [] : [color]));
   };
 
   const togglePriceRange = (range: string) => {
-    setSelectedPriceRanges((prev) =>
-      prev.includes(range) ? prev.filter((r) => r !== range) : [...prev, range]
-    );
+    setSelectedPriceRanges((prev) => (prev.includes(range) ? [] : [range]));
   };
 
   const clearAllFilters = () => {
@@ -447,16 +455,27 @@ const Catalogue = () => {
     setSelectedColors([]);
     setSelectedPriceRanges([]);
     setShowNewOnly(false);
+
+    // Clear URL parameters
+    if (typeof window !== "undefined") {
+      window.history.pushState(null, "", "/catalogue");
+    }
   };
 
   // Filter products
   const filteredProducts = products.filter((product) => {
-    // Filter by search term
-    if (
-      searchTerm &&
-      !product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    ) {
-      return false;
+    // Filter by search term (search in name, brand, and category)
+    if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase();
+      const nameMatch = product.name.toLowerCase().includes(searchLower);
+      const brandMatch = product.brand.toLowerCase().includes(searchLower);
+      const categoryMatch = product.category
+        .toLowerCase()
+        .includes(searchLower);
+
+      if (!nameMatch && !brandMatch && !categoryMatch) {
+        return false;
+      }
     }
 
     // Filter by category
@@ -533,6 +552,22 @@ const Catalogue = () => {
     document.dispatchEvent(event);
   };
 
+  // Function to scroll to category section
+  const scrollToCategory = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+
+    // Scroll to the products section with smooth behavior
+    setTimeout(() => {
+      const productsSection = document.getElementById("products-section");
+      if (productsSection) {
+        productsSection.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    }, 100);
+  };
+
   return (
     <div className="bg-neutral-light min-h-screen pb-16">
       {/* Page Header */}
@@ -559,7 +594,7 @@ const Catalogue = () => {
                     ? "bg-primary/10 border-2 border-primary"
                     : "bg-neutral-light hover:bg-neutral-light/70 border-2 border-transparent"
                 }`}
-                onClick={() => setSelectedCategory(category.id)}
+                onClick={() => scrollToCategory(category.id)}
               >
                 <div className="h-14 w-14 mb-2">
                   <img
@@ -592,202 +627,242 @@ const Catalogue = () => {
           <div
             className={`${
               showFilters ? "block" : "hidden"
-            } md:block md:w-1/4 lg:w-1/5 space-y-6`}
+            } md:block md:w-1/4 lg:w-1/5 space-y-6 relative z-10`}
           >
-            {/* Search Filter */}
-            <div className="bg-white p-5 rounded-xl shadow-sm">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Rechercher un produit..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full py-2 px-4 pr-10 rounded-lg border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent"
-                />
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                  {searchTerm ? (
-                    <button
-                      onClick={() => setSearchTerm("")}
-                      className="text-gray-400 hover:text-gray-600"
-                    >
-                      <X className="h-5 w-5" />
-                    </button>
-                  ) : (
-                    <Search className="h-5 w-5 text-gray-400" />
-                  )}
+            {/* Mobile Filter Overlay */}
+            {showFilters && (
+              <div
+                className="md:hidden fixed inset-0 bg-black/50 z-40"
+                onClick={() => setShowFilters(false)}
+              />
+            )}
+
+            {/* Filter Content */}
+            <div
+              className={`${
+                showFilters
+                  ? "md:hidden fixed top-0 left-0 h-full w-4/5 max-w-sm bg-white z-50 overflow-y-auto p-4 shadow-xl"
+                  : "md:block"
+              } md:relative md:bg-transparent md:shadow-none md:p-0`}
+            >
+              {showFilters && (
+                <div className="md:hidden flex items-center justify-between mb-4 pb-4 border-b">
+                  <h2 className="text-lg font-semibold">Filtres</h2>
+                  <button
+                    onClick={() => setShowFilters(false)}
+                    className="p-2 hover:bg-gray-100 rounded-lg"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              )}
+              {/* Search Filter */}
+              <div className="bg-white p-5 rounded-xl shadow-sm">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Rechercher un produit..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full py-2 px-4 pr-10 rounded-lg border-gray-200 focus:ring-2 focus:ring-primary focus:border-transparent"
+                  />
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                    {searchTerm ? (
+                      <button
+                        onClick={() => setSearchTerm("")}
+                        className="text-gray-400 hover:text-gray-600"
+                      >
+                        <X className="h-5 w-5" />
+                      </button>
+                    ) : (
+                      <Search className="h-5 w-5 text-gray-400" />
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Brand Filter */}
-            <div className="bg-white p-5 rounded-xl shadow-sm">
-              <h3 className="font-semibold mb-4 flex items-center">
-                <span>Marques</span>
-                {selectedBrands.length > 0 && (
-                  <span className="ml-2 bg-primary text-white text-xs py-0.5 px-2 rounded-full">
-                    {selectedBrands.length}
-                  </span>
-                )}
-              </h3>
-              <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
-                {brands.map((brand) => (
-                  <div key={brand.id} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id={`brand-${brand.id}`}
-                      checked={selectedBrands.includes(brand.id)}
-                      onChange={() => toggleBrand(brand.id)}
-                      className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
-                    />
-                    <label
-                      htmlFor={`brand-${brand.id}`}
-                      className="ml-2 text-sm font-medium text-gray-700 flex items-center"
-                    >
-                      <img
-                        src={brand.logo}
-                        alt={brand.name}
-                        className="w-5 h-5 mr-2 object-contain"
+              {/* Brand Filter */}
+              <div className="bg-white p-5 rounded-xl shadow-sm">
+                <h3 className="font-semibold mb-4 flex items-center">
+                  <span>Marque</span>
+                  {selectedBrands.length > 0 && (
+                    <span className="ml-2 bg-primary text-white text-xs py-0.5 px-2 rounded-full">
+                      1
+                    </span>
+                  )}
+                </h3>
+                <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
+                  {brands.map((brand) => (
+                    <div key={brand.id} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id={`brand-${brand.id}`}
+                        checked={selectedBrands.includes(brand.id)}
+                        onChange={() => toggleBrand(brand.id)}
+                        className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
                       />
-                      {brand.name}
-                    </label>
-                  </div>
-                ))}
+                      <label
+                        htmlFor={`brand-${brand.id}`}
+                        className="ml-2 text-sm font-medium text-gray-700 flex items-center"
+                      >
+                        <img
+                          src={brand.logo}
+                          alt={brand.name}
+                          className="w-5 h-5 mr-2 object-contain"
+                        />
+                        {brand.name}
+                      </label>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Storage Filter */}
-            <div className="bg-white p-5 rounded-xl shadow-sm">
-              <h3 className="font-semibold mb-4 flex items-center">
-                <span>Stockage</span>
-                {selectedStorage.length > 0 && (
-                  <span className="ml-2 bg-primary text-white text-xs py-0.5 px-2 rounded-full">
-                    {selectedStorage.length}
-                  </span>
-                )}
-              </h3>
-              <div className="space-y-2">
-                {storageOptions.map((storage) => (
-                  <div key={storage} className="flex items-center">
+              {/* Storage Filter */}
+              <div className="bg-white p-5 rounded-xl shadow-sm">
+                <h3 className="font-semibold mb-4 flex items-center">
+                  <span>Stockage</span>
+                  {selectedStorage.length > 0 && (
+                    <span className="ml-2 bg-primary text-white text-xs py-0.5 px-2 rounded-full">
+                      1
+                    </span>
+                  )}
+                </h3>
+                <div className="space-y-2">
+                  {storageOptions.map((storage) => (
+                    <div key={storage} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id={`storage-${storage}`}
+                        checked={selectedStorage.includes(storage)}
+                        onChange={() => toggleStorage(storage)}
+                        className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                      />
+                      <label
+                        htmlFor={`storage-${storage}`}
+                        className="ml-2 text-sm font-medium text-gray-700"
+                      >
+                        {storage}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Color Filter */}
+              <div className="bg-white p-5 rounded-xl shadow-sm">
+                <h3 className="font-semibold mb-4 flex items-center">
+                  <span>Couleur</span>
+                  {selectedColors.length > 0 && (
+                    <span className="ml-2 bg-primary text-white text-xs py-0.5 px-2 rounded-full">
+                      1
+                    </span>
+                  )}
+                </h3>
+                <div className="space-y-2">
+                  {colorOptions.map((color) => (
+                    <div key={color} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id={`color-${color}`}
+                        checked={selectedColors.includes(color)}
+                        onChange={() => toggleColor(color)}
+                        className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                      />
+                      <label
+                        htmlFor={`color-${color}`}
+                        className="ml-2 text-sm font-medium text-gray-700"
+                      >
+                        {color}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Price Range Filter */}
+              <div className="bg-white p-5 rounded-xl shadow-sm">
+                <h3 className="font-semibold mb-4 flex items-center">
+                  <span>Prix</span>
+                  {selectedPriceRanges.length > 0 && (
+                    <span className="ml-2 bg-primary text-white text-xs py-0.5 px-2 rounded-full">
+                      1
+                    </span>
+                  )}
+                </h3>
+                <div className="space-y-2">
+                  {priceRanges.map((range) => (
+                    <div key={range.id} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id={`price-${range.id}`}
+                        checked={selectedPriceRanges.includes(range.id)}
+                        onChange={() => togglePriceRange(range.id)}
+                        className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                      />
+                      <label
+                        htmlFor={`price-${range.id}`}
+                        className="ml-2 text-sm font-medium text-gray-700"
+                      >
+                        {range.label}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* New Products Filter */}
+              <div className="bg-white p-5 rounded-xl shadow-sm">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-semibold">Nouveautés uniquement</h3>
+                  <label className="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
-                      id={`storage-${storage}`}
-                      checked={selectedStorage.includes(storage)}
-                      onChange={() => toggleStorage(storage)}
-                      className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                      className="sr-only peer"
+                      checked={showNewOnly}
+                      onChange={() => setShowNewOnly(!showNewOnly)}
                     />
-                    <label
-                      htmlFor={`storage-${storage}`}
-                      className="ml-2 text-sm font-medium text-gray-700"
-                    >
-                      {storage}
-                    </label>
-                  </div>
-                ))}
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                  </label>
+                </div>
               </div>
-            </div>
 
-            {/* Color Filter */}
-            <div className="bg-white p-5 rounded-xl shadow-sm">
-              <h3 className="font-semibold mb-4 flex items-center">
-                <span>Couleur</span>
-                {selectedColors.length > 0 && (
-                  <span className="ml-2 bg-primary text-white text-xs py-0.5 px-2 rounded-full">
-                    {selectedColors.length}
-                  </span>
-                )}
-              </h3>
-              <div className="space-y-2">
-                {colorOptions.map((color) => (
-                  <div key={color} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id={`color-${color}`}
-                      checked={selectedColors.includes(color)}
-                      onChange={() => toggleColor(color)}
-                      className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
-                    />
-                    <label
-                      htmlFor={`color-${color}`}
-                      className="ml-2 text-sm font-medium text-gray-700"
-                    >
-                      {color}
-                    </label>
-                  </div>
-                ))}
-              </div>
+              {/* Clear Filters Button */}
+              {(selectedBrands.length > 0 ||
+                selectedStorage.length > 0 ||
+                selectedColors.length > 0 ||
+                selectedPriceRanges.length > 0 ||
+                showNewOnly ||
+                searchTerm) && (
+                <button
+                  className="w-full bg-white border border-gray-300 py-2 px-4 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors duration-200"
+                  onClick={clearAllFilters}
+                >
+                  Effacer tous les filtres
+                </button>
+              )}
             </div>
-
-            {/* Price Range Filter */}
-            <div className="bg-white p-5 rounded-xl shadow-sm">
-              <h3 className="font-semibold mb-4 flex items-center">
-                <span>Prix</span>
-                {selectedPriceRanges.length > 0 && (
-                  <span className="ml-2 bg-primary text-white text-xs py-0.5 px-2 rounded-full">
-                    {selectedPriceRanges.length}
-                  </span>
-                )}
-              </h3>
-              <div className="space-y-2">
-                {priceRanges.map((range) => (
-                  <div key={range.id} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id={`price-${range.id}`}
-                      checked={selectedPriceRanges.includes(range.id)}
-                      onChange={() => togglePriceRange(range.id)}
-                      className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
-                    />
-                    <label
-                      htmlFor={`price-${range.id}`}
-                      className="ml-2 text-sm font-medium text-gray-700"
-                    >
-                      {range.label}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* New Products Filter */}
-            <div className="bg-white p-5 rounded-xl shadow-sm">
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold">Nouveautés uniquement</h3>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input
-                    type="checkbox"
-                    className="sr-only peer"
-                    checked={showNewOnly}
-                    onChange={() => setShowNewOnly(!showNewOnly)}
-                  />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                </label>
-              </div>
-            </div>
-
-            {/* Clear Filters Button */}
-            {(selectedBrands.length > 0 ||
-              selectedStorage.length > 0 ||
-              selectedColors.length > 0 ||
-              selectedPriceRanges.length > 0 ||
-              showNewOnly ||
-              searchTerm) && (
-              <button
-                className="w-full bg-white border border-gray-300 py-2 px-4 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors duration-200"
-                onClick={clearAllFilters}
-              >
-                Effacer tous les filtres
-              </button>
-            )}
           </div>
 
           {/* Product List */}
-          <div className="flex-1">
+          <div className="flex-1" id="products-section">
             {/* Sorting & Results Count */}
             <div className="bg-white p-4 rounded-xl shadow-sm mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center">
-              <p className="text-gray-700 mb-2 sm:mb-0">
-                <span className="font-semibold">{sortedProducts.length}</span>{" "}
-                produits trouvés
-              </p>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                <p className="text-gray-700">
+                  <span className="font-semibold">{sortedProducts.length}</span>{" "}
+                  produits trouvés
+                </p>
+                {(searchTerm ||
+                  selectedBrands.length > 0 ||
+                  selectedStorage.length > 0 ||
+                  selectedColors.length > 0 ||
+                  selectedPriceRanges.length > 0 ||
+                  showNewOnly) && (
+                  <span className="text-sm text-primary font-medium">
+                    (Filtres actifs)
+                  </span>
+                )}
+              </div>
 
               <div className="relative">
                 <select
@@ -807,10 +882,12 @@ const Catalogue = () => {
 
             {/* Products Grid */}
             {sortedProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {sortedProducts.map((product) => (
-                  <div
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                {sortedProducts.map((product, index) => (
+                  <AnimatedCard
                     key={product.id}
+                    animation="fadeUp"
+                    delay={0.1 * index}
                     className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group relative"
                   >
                     {product.new && (
@@ -818,20 +895,26 @@ const Catalogue = () => {
                         Nouveau
                       </div>
                     )}
-                    <div className="p-4 flex justify-center h-48 bg-gray-50">
+                    <div className="p-3 sm:p-4 flex justify-center h-40 sm:h-48 bg-gray-50">
                       <img
                         src={product.image}
                         alt={product.name}
                         className="h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src =
+                            "https://via.placeholder.com/300x300?text=Image+Non+Disponible";
+                        }}
                       />
                     </div>
-                    <div className="p-4">
+                    <div className="p-3 sm:p-4">
                       <div className="flex items-center text-xs text-gray-500 mb-1">
-                        <span>{product.storage}</span>
-                        <span className="mx-1">•</span>
-                        <span>{product.color}</span>
+                        <span className="truncate">{product.storage}</span>
+                        <span className="mx-1 flex-shrink-0">•</span>
+                        <span className="truncate">{product.color}</span>
                       </div>
-                      <h3 className="font-semibold text-lg mb-1 group-hover:text-primary transition-colors">
+                      <h3 className="font-semibold text-base sm:text-lg mb-1 group-hover:text-primary transition-colors line-clamp-2">
                         {product.name}
                       </h3>
                       <div className="flex items-center mb-2">
@@ -846,31 +929,32 @@ const Catalogue = () => {
                         </span>
                       </div>
                       <div className="flex justify-between items-center mt-3">
-                        <span className="font-bold text-lg">
+                        <span className="font-bold text-base sm:text-lg">
                           ${product.price}
                         </span>
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => handleAddToCart(product)}
-                            className="bg-primary hover:bg-primary/90 text-white p-2 rounded-lg transition-colors"
+                            className="bg-primary hover:bg-primary/90 text-white p-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center justify-center"
                             aria-label="Ajouter au panier"
                           >
-                            <Plus className="h-5 w-5" />
+                            <Plus className="h-4 w-4" />
                           </button>
                           <a
                             href={`https://wa.me/+243814264458?text=Bonjour!%20Je%20voudrais%20commander%20un%20${encodeURIComponent(
                               product.name
                             )}.`}
-                            className="bg-whatsapp hover:bg-whatsapp/90 text-white p-2 rounded-lg transition-colors"
+                            className="bg-whatsapp hover:bg-whatsapp/90 text-white p-2 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center justify-center"
                             target="_blank"
                             rel="noopener noreferrer"
+                            aria-label="Contacter sur WhatsApp"
                           >
-                            <FaWhatsapp className="h-5 w-5" />
+                            <FaWhatsapp className="h-4 w-4" />
                           </a>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </AnimatedCard>
                 ))}
               </div>
             ) : (

@@ -83,6 +83,85 @@
     }
 }
 
+
+/* Mobile Menu Animations */
+
+@keyframes slide-in-from-left {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slide-in-from-right {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fade-in-scale {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes menu-item-slide-in {
+    0% {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes backdrop-blur-in {
+    0% {
+        backdrop-filter: blur(0px);
+        background-color: rgba(0, 0, 0, 0);
+    }
+    100% {
+        backdrop-filter: blur(8px);
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+}
+
+@keyframes icon-rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(180deg);
+    }
+}
+
+@keyframes button-pulse {
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+    }
+}
+
 .animate-fade-in-up {
     animation: fade-in-up 0.8s ease-out forwards;
     opacity: 0;
@@ -112,6 +191,37 @@
 
 .animate-float-delayed {
     animation: float-delayed 3s ease-in-out infinite 1.5s;
+}
+
+
+/* Mobile Menu Animation Classes */
+
+.animate-slide-in-from-left {
+    animation: slide-in-from-left 0.5s ease-out forwards;
+}
+
+.animate-slide-in-from-right {
+    animation: slide-in-from-right 0.5s ease-out forwards;
+}
+
+.animate-fade-in-scale {
+    animation: fade-in-scale 0.6s ease-out forwards;
+}
+
+.animate-menu-item-slide-in {
+    animation: menu-item-slide-in 0.4s ease-out forwards;
+}
+
+.animate-backdrop-blur-in {
+    animation: backdrop-blur-in 0.5s ease-out forwards;
+}
+
+.animate-icon-rotate {
+    animation: icon-rotate 0.3s ease-out forwards;
+}
+
+.animate-button-pulse {
+    animation: button-pulse 2s infinite;
 }
 
 :root {
@@ -199,6 +309,182 @@
         --ring: 240 5.9% 10%;
         --background: 0 0% 100%;
         --foreground: 240 10% 3.9%;
+        --muted: 240 4.8% 95.9%;
+        --muted-foreground: 240 3.8% 46.1%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 240 10% 3.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 240 10% 3.9%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 60 9.1% 97.8%;
+        --radius: 0.5rem;
+    }
+    .font-poppins {
+        font-family: "Poppins", sans-serif;
+    }
+    .font-roboto {
+        font-family: "Roboto", sans-serif;
+    }
+    .bg-neutral-dark {
+        background-color: hsl(var(--neutral-dark));
+    }
+    .bg-neutral-light {
+        background-color: hsl(var(--neutral-light));
+    }
+    .text-neutral-dark {
+        color: hsl(var(--neutral-dark));
+    }
+    .bg-status-success {
+        background-color: hsl(var(--status-success));
+    }
+    .bg-status-warning {
+        background-color: hsl(var(--status-warning));
+    }
+    .bg-status-error {
+        background-color: hsl(var(--status-error));
+    }
+    .bg-whatsapp {
+        background-color: hsl(var(--whatsapp));
+    }
+    .hover\:bg-whatsapp:hover {
+        background-color: hsl(var(--whatsapp) / 0.9);
+    }
+    .animated-title span {
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: appearBlurUp 0.8s ease-out forwards;
+    }
+    @media screen and (max-width: 480px) {
+        .animated-title span {
+            font-size: 1.5rem;
+        }
+    }
+    .animated-title span:nth-child(1) {
+        animation-delay: 0.1s;
+    }
+    .animated-title span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    .animated-title span:nth-child(3) {
+        animation-delay: 0.3s;
+    }
+    .animated-title span:nth-child(4) {
+        animation-delay: 0.4s;
+    }
+    .animated-title span:nth-child(5) {
+        animation-delay: 0.5s;
+    }
+    .animated-title span:nth-child(6) {
+        animation-delay: 0.6s;
+    }
+    .animated-title span:nth-child(7) {
+        animation-delay: 0.7s;
+    }
+    .animated-title span:nth-child(8) {
+        animation-delay: 0.8s;
+    }
+    .animated-title span:nth-child(9) {
+        animation-delay: 0.9s;
+    }
+    @keyframes appearBlurUp {
+        0% {
+            opacity: 0;
+            transform: translateY(20px) blur(10px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0) blur(0);
+        }
+    }
+    .line-clamp-1 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+    }
+    .line-clamp-2 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+    .line-clamp-3 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+    }
+    /* Mobile-specific utilities for iPhone SE and small screens */
+    @media (max-width: 640px) {
+        .mobile-text-sm {
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+        .mobile-text-xs {
+            font-size: 0.75rem;
+            line-height: 1rem;
+        }
+        .mobile-p-2 {
+            padding: 0.5rem;
+        }
+        .mobile-p-3 {
+            padding: 0.75rem;
+        }
+    }
+    /* iPhone SE specific optimizations */
+    @media (max-width: 375px) {
+        .mobile-menu-compact {
+            padding: 0.5rem;
+        }
+        .mobile-menu-compact .text-base {
+            font-size: 0.875rem;
+        }
+        .mobile-menu-compact .space-y-3>li {
+            margin-bottom: 0.5rem;
+        }
+        .mobile-menu-compact .py-2 {
+            padding-top: 0.375rem;
+            padding-bottom: 0.375rem;
+        }
+    }
+    /* Ensure proper touch targets on mobile */
+    @media (max-width: 640px) {
+        button,
+        a {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        .touch-target {
+            min-height: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+    /* Enhanced mobile menu animations */
+    .mobile-menu-item {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .mobile-menu-item:hover {
+        transform: translateX(8px) scale(1.02);
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    }
+    .mobile-menu-button {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .mobile-menu-button:hover {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    .mobile-menu-overlay {
+        backdrop-filter: blur(8px);
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%);
+    }
+    .mobile-menu-panel {
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        background: linear-gradient(135deg, hsl(var(--neutral-dark)) 0%, hsl(var(--neutral-dark) / 0.95) 100%);
     }
 }
 
@@ -280,6 +566,40 @@
             opacity: 1;
             transform: translateY(0);
             filter: blur(0);
+        }
+    }
+    /* Line clamp utilities */
+    .line-clamp-1 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+    }
+    .line-clamp-2 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+    .line-clamp-3 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+    }
+    /* Mobile-specific utilities */
+    @media (max-width: 640px) {
+        .mobile-text-sm {
+            font-size: 0.875rem;
+        }
+        .mobile-text-xs {
+            font-size: 0.75rem;
+        }
+        .mobile-p-2 {
+            padding: 0.5rem;
+        }
+        .mobile-p-3 {
+            padding: 0.75rem;
         }
     }
 }

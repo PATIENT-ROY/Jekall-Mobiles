@@ -14,7 +14,7 @@ export function useIntersectionObserver(
 ) {
   const [isIntersecting, setIsIntersecting] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   const {
     threshold = 0.1,

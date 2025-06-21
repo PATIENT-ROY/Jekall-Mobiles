@@ -48,8 +48,16 @@ const ScrollLink: React.FC<ScrollLinkProps> = ({
       scrollToId(hash, { offset });
 
       // Update URL without a page reload
-      if (typeof window !== "undefined") {
-        window.history.pushState(null, "", `${path || ""}#${hash}`);
+      if (typeof window !== "undefined" && window.history) {
+        try {
+          window.history.pushState(null, "", `${path || ""}#${hash}`);
+        } catch (error) {
+          // Fallback for older browsers
+          console.warn(
+            "History API not supported, falling back to hash change"
+          );
+          window.location.hash = hash;
+        }
       }
     }
 

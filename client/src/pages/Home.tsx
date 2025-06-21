@@ -11,6 +11,9 @@ import {
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import HomeNavigation from "@/components/HomeNavigation";
+import AnimatedHeading from "@/components/AnimatedHeading";
+import AnimatedSection from "@/components/AnimatedSection";
+import AnimatedCard from "@/components/AnimatedCard";
 import useIntersectionObserver from "@/hooks/use-intersection-observer";
 import Smartphones from "@/./assets/images/categories/icon-categories/i-removebg-preview.png";
 import accessories from "@/./assets/images/categories/icon-categories/accessories-icon.png";
@@ -156,202 +159,191 @@ const Home = () => {
       <HomeNavigation />
 
       {/* Slogan Banner */}
-      <div className="bg-white border-b">
-        <div className="container mx-auto px-4 py-4 text-center">
-          <p className="text-lg md:text-xl font-medium animated-title">
-            {"Le Prix s'oublie mais la".split(" ").map((word, index) => (
-              <span key={index} className="mr-1">
-                {word}
-              </span>
-            ))}
-            <span className="text-primary font-semibold mr-1">Qualité</span>
-            {"reste et assure".split(" ").map((word, index) => (
-              <span key={index + 5} className="mr-1">
-                {word}
-              </span>
-            ))}
-          </p>
+      <AnimatedSection animation="fadeUp" delay={0.2}>
+        <div className="bg-white border-b">
+          <div className="container mx-auto px-4 py-4 text-center">
+            <p className="text-lg md:text-xl font-medium animated-title">
+              {"Le Prix s'oublie mais la".split(" ").map((word, index) => (
+                <span key={index} className="mr-1">
+                  {word}
+                </span>
+              ))}
+              <span className="text-primary font-semibold mr-1">Qualité</span>
+              {"reste et assure".split(" ").map((word, index) => (
+                <span key={index + 5} className="mr-1">
+                  {word}
+                </span>
+              ))}
+            </p>
+          </div>
         </div>
-      </div>
+      </AnimatedSection>
 
       {/* Hero Slider */}
-      <div className="relative bg-neutral-dark overflow-hidden">
-        <div
-          className="flex transition-transform duration-500 ease-in-out h-[400px] md:h-[500px]"
-          style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-        >
-          {bannerSlides.map((slide) => (
-            <div key={slide.id} className="min-w-full relative">
-              <img
-                src={slide.image}
-                alt={slide.title}
-                className="w-full h-full object-cover opacity-70"
-              />
-              <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-6">
-                <div className="bg-black/40 p-6 md:p-8 rounded-xl backdrop-blur-sm max-w-2xl">
-                  <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
-                    {slide.title}
-                  </h2>
-                  <p className="text-lg text-white/90 mb-6">
-                    {slide.description}
-                  </p>
-                  <Link
-                    href="/catalogue"
-                    className="inline-block bg-primary hover:bg-primary/90 text-white py-3 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
-                  >
-                    Découvrir
-                  </Link>
+      <AnimatedSection animation="fadeIn" delay={0.3}>
+        <div className="relative bg-neutral-dark overflow-hidden">
+          <div
+            className="flex transition-transform duration-500 ease-in-out h-[400px] md:h-[500px]"
+            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+          >
+            {bannerSlides.map((slide) => (
+              <div key={slide.id} className="min-w-full relative">
+                <img
+                  src={slide.image}
+                  alt={slide.title}
+                  className="w-full h-full object-cover opacity-70"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src =
+                      "https://via.placeholder.com/1200x500?text=Image+Non+Disponible";
+                  }}
+                />
+                <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-6">
+                  <div className="bg-black/40 p-6 md:p-8 rounded-xl backdrop-blur-sm max-w-2xl">
+                    <AnimatedHeading
+                      variant="h2"
+                      animation="bounce"
+                      delay={0.1}
+                      className="text-3xl md:text-4xl font-bold mb-4 text-white"
+                    >
+                      {slide.title}
+                    </AnimatedHeading>
+                    <p className="text-lg text-white/90 mb-6">
+                      {slide.description}
+                    </p>
+                    <Link
+                      href="/catalogue"
+                      className="inline-block bg-primary hover:bg-primary/90 text-white py-3 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
+                    >
+                      Découvrir
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
 
-        {/* Slider Controls */}
-        <button
-          className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full backdrop-blur-sm transition-all duration-200"
-          onClick={prevSlide}
-          aria-label="Slide précédente"
-        >
-          <ChevronLeft className="h-6 w-6" />
-        </button>
-        <button
-          className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full backdrop-blur-sm transition-all duration-200"
-          onClick={nextSlide}
-          aria-label="Slide suivante"
-        >
-          <ChevronRight className="h-6 w-6" />
-        </button>
+          {/* Slider Controls */}
+          <button
+            onClick={prevSlide}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full transition-all duration-200 backdrop-blur-sm"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+          <button
+            onClick={nextSlide}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full transition-all duration-200 backdrop-blur-sm"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
 
-        {/* Dots */}
-        <div className="absolute bottom-6 left-0 right-0 flex justify-center space-x-2">
-          {bannerSlides.map((_, index) => (
-            <button
-              key={index}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                index === currentSlide ? "w-8 bg-primary" : "w-2 bg-white/50"
-              }`}
-              onClick={() => setCurrentSlide(index)}
-              aria-label={`Aller au slide ${index + 1}`}
-            />
-          ))}
+          {/* Slide Indicators */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+            {bannerSlides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                  index === currentSlide
+                    ? "bg-white scale-125"
+                    : "bg-white/50 hover:bg-white/75"
+                }`}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      </AnimatedSection>
 
       {/* Categories Section */}
-      <section
+      <AnimatedSection
         id="categories"
         ref={categoriesRef}
-        className="py-16 bg-white overflow-hidden"
+        animation="fadeUp"
+        delay={0.4}
+        className="py-16 bg-neutral-light"
       >
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-10">
-            <div className="relative">
-              <h2
-                className={`text-2xl md:text-3xl font-bold transition-all duration-800 ${
-                  categoriesInView
-                    ? "animate-fade-in-up"
-                    : "opacity-0 translate-y-8"
-                }`}
-              >
-                Nos Catégories
-              </h2>
-              <div
-                className={`absolute -bottom-2 left-0 h-1 bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-1000 delay-500 ${
-                  categoriesInView ? "w-16 opacity-100" : "w-0 opacity-0"
-                }`}
-              ></div>
-            </div>
-            <Link
-              href="/catalogue"
-              className={`text-secondary hover:text-secondary/80 font-medium flex items-center group transition-all duration-600 delay-300 ${
-                categoriesInView
-                  ? "opacity-100 translate-x-0"
-                  : "opacity-0 translate-x-5"
-              }`}
+          <div className="text-center mb-12">
+            <AnimatedHeading
+              variant="h2"
+              animation="slide"
+              delay={0.2}
+              className="text-3xl md:text-4xl font-bold mb-4"
             >
-              Voir tout
-              <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
+              Nos Catégories
+            </AnimatedHeading>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Découvrez notre large gamme de produits technologiques de qualité
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {categories.map((category, index) => (
-              <Link
+              <AnimatedCard
                 key={category.id}
-                href={category.link}
-                className={`relative bg-gradient-to-br from-neutral-light to-neutral-light/80 hover:from-white hover:to-neutral-light/50 p-8 rounded-2xl transition-all duration-700 flex flex-col items-center text-center group hover:shadow-xl border border-transparent hover:border-primary/20 ${
-                  categoriesInView
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-12"
-                }`}
-                style={{
-                  transitionDelay: categoriesInView
-                    ? `${600 + index * 150}ms`
-                    : "0ms",
-                }}
+                animation="scale"
+                delay={0.1 * index}
+                className="bg-white rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                {/* Background Glow Effect */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                {/* Floating Animation Container */}
-                <div className="relative z-10 h-24 w-24 mb-6 transition-all duration-500 group-hover:scale-110 group-hover:-translate-y-2">
-                  {/* Icon Background with Pulse */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-full animate-pulse-slow group-hover:animate-none"></div>
-
-                  {/* Icon with Bounce Animation */}
-                  <div className="relative h-full w-full flex items-center justify-center">
-                    <img
-                      src={category.image}
-                      alt={category.name}
-                      className="h-16 w-auto object-contain transition-all duration-500 group-hover:brightness-110 animate-bounce-gentle"
-                    />
-                  </div>
-
-                  {/* Floating Particles */}
-                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-primary/30 rounded-full animate-float opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <div className="absolute -bottom-2 -left-1 w-1.5 h-1.5 bg-secondary/40 rounded-full animate-float-delayed opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="w-20 h-20 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+                  <img
+                    src={category.image}
+                    alt={category.name}
+                    className="w-12 h-12 object-contain"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src =
+                        "https://via.placeholder.com/48x48?text=Icon";
+                    }}
+                  />
                 </div>
-
-                {/* Text with Slide Animation */}
-                <div className="relative z-10 transition-all duration-300 group-hover:translate-y-1">
-                  <h3 className="text-xl font-semibold text-gray-800 group-hover:text-primary transition-colors duration-300">
-                    {category.name}
-                  </h3>
-
-                  {/* Animated Underline */}
-                  <div className="w-0 h-0.5 bg-gradient-to-r from-primary to-secondary mx-auto mt-2 transition-all duration-500 group-hover:w-12"></div>
-                </div>
-
-                {/* Hover Arrow */}
-                <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
-                  <ArrowRight className="h-5 w-5 text-primary" />
-                </div>
-              </Link>
+                <h3 className="text-xl font-semibold mb-2">{category.name}</h3>
+                <Link
+                  href={category.link}
+                  className="inline-flex items-center text-primary hover:text-primary/80 font-medium transition-all duration-300 transform hover:scale-105 hover:translate-x-1 group"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // Smooth scroll to catalogue page
+                    window.location.href = category.link;
+                  }}
+                >
+                  Voir les produits
+                  <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </Link>
+              </AnimatedCard>
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
-      {/* Featured Products */}
-      <section id="featured-products" className="py-16 bg-neutral-light">
+      {/* Featured Products Section */}
+      <AnimatedSection
+        id="featured-products"
+        animation="slideUp"
+        delay={0.5}
+        className="py-16 bg-white"
+      >
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-10">
-            <h2 className="text-2xl md:text-3xl font-bold">
-              Produits Populaires
-            </h2>
-            <Link
-              href="/catalogue"
-              className="text-secondary hover:text-secondary/80 font-medium flex items-center"
+          <div className="text-center mb-12">
+            <AnimatedHeading
+              variant="h2"
+              animation="flip"
+              delay={0.3}
+              className="text-3xl md:text-4xl font-bold mb-4"
             >
-              Voir tout <ArrowRight className="ml-1 h-4 w-4" />
-            </Link>
+              Produits Populaires
+            </AnimatedHeading>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Les smartphones les plus demandés par nos clients
+            </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProducts.map((product) => (
-              <div
+            {featuredProducts.map((product, index) => (
+              <AnimatedCard
                 key={product.id}
+                animation="bounce"
+                delay={0.1 * index}
                 className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group"
               >
                 <div className="p-4 flex justify-center h-48 bg-gray-50">
@@ -359,6 +351,11 @@ const Home = () => {
                     src={product.image}
                     alt={product.name}
                     className="h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src =
+                        "https://via.placeholder.com/300x300?text=Image+Non+Disponible";
+                    }}
                   />
                 </div>
                 <div className="p-4">
@@ -388,56 +385,92 @@ const Home = () => {
                     </a>
                   </div>
                 </div>
-              </div>
+              </AnimatedCard>
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* Benefits Section */}
-      <section id="benefits" className="py-16 bg-white">
+      <AnimatedSection
+        id="benefits"
+        animation="stagger"
+        delay={0.6}
+        staggerChildren={true}
+        className="py-16 bg-neutral-light"
+      >
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">
-            Pourquoi Nous Choisir?
-          </h2>
+          <div className="text-center mb-12">
+            <AnimatedHeading
+              variant="h2"
+              animation="fade"
+              delay={0.4}
+              className="text-3xl md:text-4xl font-bold mb-4"
+            >
+              Pourquoi Nous Choisir
+            </AnimatedHeading>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Votre confiance est notre priorité
+            </p>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {benefits.map((benefit) => (
-              <div
+            {benefits.map((benefit, index) => (
+              <AnimatedCard
                 key={benefit.id}
-                className="text-center p-6 rounded-xl hover:bg-neutral-light transition-colors duration-300"
+                animation="fadeUp"
+                delay={0.1 * index}
+                className="bg-white rounded-xl p-6 text-center shadow-lg"
               >
-                <div className="bg-neutral-light h-16 w-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
                   {benefit.icon}
                 </div>
                 <h3 className="text-xl font-semibold mb-3">{benefit.title}</h3>
                 <p className="text-gray-600">{benefit.description}</p>
-              </div>
+              </AnimatedCard>
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
-      {/* CTA Section */}
-      <section id="contact" className="py-12 bg-neutral-dark text-white">
+      {/* Contact Section */}
+      <AnimatedSection
+        id="contact"
+        animation="scaleIn"
+        delay={0.7}
+        className="py-16 bg-neutral-dark text-white"
+      >
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            Besoin d'assistance?
-          </h2>
-          <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-            Contactez-nous directement via WhatsApp pour une réponse rapide à
-            toutes vos questions.
-          </p>
-          <a
-            href="https://wa.me/+243814264458"
-            className="inline-flex items-center bg-whatsapp hover:bg-whatsapp/90 text-white px-8 py-3 rounded-lg transition-all duration-200 font-medium text-lg"
-            target="_blank"
-            rel="noopener noreferrer"
+          <AnimatedHeading
+            variant="h2"
+            animation="bounce"
+            delay={0.5}
+            className="text-3xl md:text-4xl font-bold mb-4"
           >
-            <FaWhatsapp className="mr-2 text-xl" /> Contacter sur WhatsApp
-          </a>
+            Prêt à Découvrir Nos Produits?
+          </AnimatedHeading>
+          <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
+            Vous avez des questions ou besoin de conseils? Notre équipe est
+            prête à vous aider.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <Link
+              href="/catalogue"
+              className="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-lg transition-all duration-200 font-medium text-lg min-w-[200px] transform hover:scale-105"
+            >
+              Voir nos produits
+            </Link>
+            <a
+              href="https://wa.me/+243814264458"
+              className="bg-whatsapp hover:bg-whatsapp/90 text-white px-8 py-3 rounded-lg transition-all duration-200 font-medium text-lg flex items-center justify-center min-w-[200px] transform hover:scale-105"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaWhatsapp className="mr-2 text-xl" /> Nous contacter
+            </a>
+          </div>
         </div>
-      </section>
+      </AnimatedSection>
     </div>
   );
 };

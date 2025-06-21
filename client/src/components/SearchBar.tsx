@@ -16,6 +16,14 @@ const popularSearches: SearchSuggestion[] = [
   { id: "4", name: "Google Pixel", brand: "google" },
   { id: "5", name: "AirPods Pro", brand: "apple" },
   { id: "6", name: "Galaxy Watch", brand: "samsung" },
+  { id: "7", name: "One Plus 11", brand: "oneplus" },
+  { id: "8", name: "Huawei P60", brand: "huawei" },
+  { id: "9", name: "Smartphones", brand: "smartphones" },
+  { id: "10", name: "Accessoires", brand: "accessories" },
+  { id: "11", name: "Tablettes", brand: "tablets" },
+  { id: "12", name: "Apple", brand: "apple" },
+  { id: "13", name: "Samsung", brand: "samsung" },
+  { id: "14", name: "Xiaomi", brand: "xiaomi" },
 ];
 
 const SearchBar = ({
@@ -66,9 +74,13 @@ const SearchBar = ({
       );
 
       if (matchingBrands.length > 0) {
-        navigate(`/catalogue?brands=${matchingBrands.join(",")}`);
+        navigate(
+          `/catalogue?brands=${matchingBrands.join(
+            ","
+          )}&search=${encodeURIComponent(searchTerm.trim())}`
+        );
       } else {
-        navigate("/catalogue");
+        navigate(`/catalogue?search=${encodeURIComponent(searchTerm.trim())}`);
       }
       setSearchTerm("");
       setIsFocused(false);
@@ -76,7 +88,11 @@ const SearchBar = ({
   };
 
   const handleSuggestionClick = (suggestion: SearchSuggestion) => {
-    navigate(`/catalogue?brands=${suggestion.brand}`);
+    navigate(
+      `/catalogue?brands=${suggestion.brand}&search=${encodeURIComponent(
+        suggestion.name
+      )}`
+    );
     setSearchTerm("");
     setIsFocused(false);
   };
@@ -107,25 +123,25 @@ const SearchBar = ({
       </form>
 
       {isFocused && (
-        <div className="absolute w-full bg-white shadow-lg rounded-lg mt-2 overflow-hidden z-20 border border-gray-100 animate-in fade-in-50 duration-150">
+        <div className="absolute w-full bg-white shadow-lg rounded-lg mt-2 overflow-hidden z-20 border border-gray-100 animate-in fade-in-50 duration-150 max-h-[80vh] sm:max-h-60">
           <div className="p-3 border-b border-gray-100">
             <div className="font-medium text-sm text-gray-700">
               Suggestions de recherche
             </div>
           </div>
-          <div className="max-h-60 overflow-y-auto">
+          <div className="max-h-[calc(80vh-60px)] sm:max-h-48 overflow-y-auto">
             {suggestions.length > 0 ? (
               suggestions.map((suggestion) => (
                 <button
                   key={suggestion.id}
-                  className="block w-full text-left py-2.5 px-3 hover:bg-gray-50 transition-colors duration-150 border-b border-gray-50 last:border-none"
+                  className="block w-full text-left py-3 px-3 hover:bg-gray-50 transition-colors duration-150 border-b border-gray-50 last:border-none sm:py-2.5"
                   onClick={() => handleSuggestionClick(suggestion)}
                 >
                   <div className="flex items-center">
-                    <Search className="h-4 w-4 mr-2 text-gray-400" />
-                    <div>
-                      <div>{suggestion.name}</div>
-                      <div className="text-xs text-gray-500">
+                    <Search className="h-4 w-4 mr-2 text-gray-400 flex-shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate">{suggestion.name}</div>
+                      <div className="text-xs text-gray-500 truncate">
                         {suggestion.brand}
                       </div>
                     </div>

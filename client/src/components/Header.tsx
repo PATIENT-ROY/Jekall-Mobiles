@@ -42,10 +42,10 @@ const Header: React.FC = () => {
         <div className="flex items-center justify-between">
           {/* Logo and Mobile Menu Button */}
           <div className="flex items-center">
-            <div className="xl:hidden mr-4">
+            <div className="xl:hidden mr-3 sm:mr-4">
               <MobileMenu isOpen={isMenuOpen} onToggle={toggleMenu} />
             </div>
-            <Logo className="hover:opacity-90 transition-opacity duration-200" />
+            <Logo className="hover:opacity-90 transition-opacity duration-200 text-sm sm:text-base" />
           </div>
 
           {/* Search Bar - Desktop */}
