@@ -6,7 +6,7 @@ import {
   FaInstagram,
   FaChevronRight,
 } from "react-icons/fa";
-import ScrollLink from "./ScrollLink";
+import ScrollLink from "../ScrollLink";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();

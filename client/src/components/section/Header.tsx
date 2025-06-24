@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { FaWhatsapp } from "react-icons/fa";
-import Logo from "./logo";
-import SearchBar from "./SearchBar";
-import MobileMenu from "./MobileMenu";
-import CartDropdown from "./CartDropdown";
-import ScrollLink from "./ScrollLink";
+import Logo from "../logo";
+import SearchBar from "../SearchBar";
+import MobileMenu from "../MobileMenu";
+import CartDropdown from "../CartDropdown";
+import ScrollLink from "../ScrollLink";
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
