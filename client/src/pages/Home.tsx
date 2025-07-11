@@ -300,11 +300,6 @@ const Home = () => {
                 <Link
                   href={category.link}
                   className="inline-flex items-center text-primary hover:text-primary/80 font-medium transition-all duration-300 transform hover:scale-105 hover:translate-x-1 group"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    // Smooth scroll to catalogue page
-                    window.location.href = category.link;
-                  }}
                 >
                   Voir les produits
                   <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
