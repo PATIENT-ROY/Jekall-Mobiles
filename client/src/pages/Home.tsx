@@ -129,11 +129,10 @@ const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // Intersection observer for categories section
-  const { ref: categoriesRef, isIntersecting: categoriesInView } =
-    useIntersectionObserver({
-      threshold: 0.2,
-      triggerOnce: true,
-    });
+  const { ref: categoriesRef } = useIntersectionObserver({
+    threshold: 0.2,
+    triggerOnce: true,
+  });
 
   // Auto-rotate slider
   useEffect(() => {
